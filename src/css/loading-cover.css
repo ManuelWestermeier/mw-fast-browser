@@ -1,0 +1,35 @@
+.loading-cover {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100dvw;
+    height: 100dvh;
+    background-color: black;
+
+    overflow: hidden;
+
+    animation: goOut 0.5s ease-in-out 1.5s forwards;
+}
+
+@keyframes goOut {
+    100% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+}
+
+.loading-cover img {
+    width: 50vmin;
+    height: 50vmin;
+
+    pointer-events: none;
+
+    animation: flip 0.5s ease-in-out 0.5s forwards;
+}
+
+@keyframes flip {
+    100% {
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,16 @@
+:root {
+  --ff: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --c: rgba(255, 255, 255, 0.87);
+  --b: #242424;
+}
+
+* {
+  font-family: var(--ff);
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+html {
+  color: var(--c);
+  background-color: var(--b);
+}

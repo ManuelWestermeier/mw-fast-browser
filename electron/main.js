@@ -20,6 +20,7 @@ async function createWindow() {
         width: 800,
         height: 600,
         frame: false,
+        icon: isDev ? "public/logo.png" : "../assets/logo.png",
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
