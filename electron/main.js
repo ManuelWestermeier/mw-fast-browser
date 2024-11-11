@@ -24,6 +24,7 @@ async function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
+            webviewTag: true
         },
     });
 

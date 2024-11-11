@@ -1,0 +1,31 @@
+.web-views {
+    /* Horizontal layout */
+    display: flex;
+    flex-direction: row;
+
+    /* Allow horizontal scrolling */
+    overflow-x: auto;
+    /* Disable vertical scrolling */
+    overflow-y: hidden;
+
+    /* Enable horizontal scroll snapping */
+    scroll-snap-type: x mandatory;
+    /* Smooth scrolling */
+    scroll-behavior: smooth;
+
+    background-color: white;
+}
+
+.web-views::-webkit-scrollbar {
+    /* Hide scrollbar */
+    display: none;
+}
+
+.web-views webview {
+    /* Each webview takes up 100vw */
+    flex: 0 0 100vw;
+    /* Align each webview to the start */
+    scroll-snap-align: start;
+    /* Full height of the viewport */
+    height: 100vh;
+}
