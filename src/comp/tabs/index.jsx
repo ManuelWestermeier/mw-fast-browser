@@ -8,22 +8,24 @@ export default function Tabs() {
     const { tabsElemRef } = useTabsVisibility()
 
     return (
-        <div ref={tabsElemRef} className='tabs full-screen flex fixed-t-l'>
+        <div ref={tabsElemRef} className='tabs full-screen fixed-t-l'>
+            <button>
+                +
+            </button>
             <div>
                 {tabs.map((tab, index) => {
-                    <div className={"tab" + currentTabIndex == index ? " current" : ""}>
+                    const active = currentTabIndex == index
+                    return <div className={"tab flex" + (active ? " current" : "")}>
+                        <input type="text" placeholder={tab.url} defaultValue={tab.url} />
                         <span>
                             {tab.title || tab.url}
                         </span>
-                        <button>
+                        <button className='flex'>
                             x
                         </button>
                     </div>
                 })}
             </div>
-            <button>
-                +
-            </button>
         </div>
     )
 }

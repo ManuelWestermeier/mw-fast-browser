@@ -16,3 +16,34 @@ html {
   color: var(--c);
   background-color: var(--b);
 }
+
+input,
+button {
+  padding: 5px;
+  margin: 5px;
+
+  outline: none;
+  background-color: transparent;
+  color: var(--c);
+  border: 1px solid var(--c);
+  transition: all 0.3s ease-in-out;
+}
+
+input::placeholder {
+  color: var(--c);
+}
+
+button:focus,
+input:focus {
+  background-color: var(--c);
+  color: var(--b);
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover,
+input:hover {
+  box-shadow: 0 0 20px -10px var(--c);
+}
