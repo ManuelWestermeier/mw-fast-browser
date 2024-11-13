@@ -42,3 +42,7 @@
 .tab.current {
     background-color: rebeccapurple;
 }
+
+.tab:focus {
+    background-color: gold;
+}

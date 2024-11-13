@@ -70,7 +70,7 @@ export const TabsProvider = ({ children }) => {
             if (typeof index === "number") {
                 updatedTabs.splice(index, 0, newTab);
             } else {
-                updatedTabs.push(newTab);
+                updatedTabs.unshift(newTab);
             }
             return updatedTabs;
         });
