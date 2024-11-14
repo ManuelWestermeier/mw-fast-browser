@@ -1,7 +1,8 @@
 // electron/main.js
 import { log } from 'console';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, globalShortcut } from 'electron';
 import express from "express"
+import loadExtensions from './load-extension.js';
 const isDev = process.env.NODE_ENV == 'development';
 
 if (!isDev) {
@@ -29,6 +30,35 @@ async function createWindow() {
     });
 
     mainWindow.loadURL('http://localhost:56722'); // Load from Vite dev server in development
+
+    // Maximize and focus the window
+    mainWindow.maximize();
+    mainWindow.focus();
+
+
+    // Register global shortcut when window is focused
+    mainWindow.on('focus', () => {
+        globalShortcut.register('Control+Tab', () => {
+            mainWindow.webContents.send('KeyDown::Control+Tab', '');
+        });
+        globalShortcut.register('Control+T', () => {
+            mainWindow.webContents.send('KeyDown::Control+T', '');
+        });
+        globalShortcut.register('Control+W', () => {
+            mainWindow.webContents.send('KeyDown::Control+W', '');
+        });
+        globalShortcut.register('Alt+Left', () => {
+            mainWindow.webContents.send('KeyDown::Control+Left', '');
+        });
+        globalShortcut.register('Alt+Right', () => {
+            mainWindow.webContents.send('KeyDown::Control+Right', '');
+        });
+    });
+
+    // Unregister all global shortcuts when the window loses focus
+    mainWindow.on('blur', () => {
+        globalShortcut.unregisterAll();
+    });
 }
 
 app.whenReady().then(createWindow);
@@ -38,6 +68,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
+    loadExtensions();
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow();
     }

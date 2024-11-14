@@ -1,3 +1,5 @@
+const { ipcRenderer } = require("electron")
+
 import React, { createContext, useContext, useRef, useState, useEffect } from "react";
 
 // Create context for tab visibility state
@@ -13,7 +15,7 @@ export const TabsVisibilityProvider = ({ children }) => {
      * @type {[boolean, React.Dispatch<React.SetStateAction<boolean>>]}
      * State to manage the visibility of the tab bar
      */
-    const [showTabBar, setShowTabBar] = useState(true);
+    const [showTabBar, setShowTabBar] = useState(false);
 
     /**
      * @type {React.RefObject<HTMLDivElement>}
@@ -37,11 +39,14 @@ export const TabsVisibilityProvider = ({ children }) => {
         }
     }, [showTabBar]);
 
+    ipcRenderer.on('KeyDown::Control+Tab', () => toggleTabBarVisibility())
+
     return (
         <TabsVisibilityContext.Provider value={{ showTabBar, setShowTabBar, toggleTabBarVisibility, tabsElemRef }}>
             {children}
         </TabsVisibilityContext.Provider>
     );
+
 };
 
 /**
