@@ -1,0 +1,15 @@
+.tabs-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.tabs-header .links {
+    margin: 0 10px;
+}
+
+.tabs-header .links a {
+    margin: 5px;
+    padding: 5px;
+}

@@ -15,7 +15,7 @@ export const TabsVisibilityProvider = ({ children }) => {
      * @type {[boolean, React.Dispatch<React.SetStateAction<boolean>>]}
      * State to manage the visibility of the tab bar
      */
-    const [showTabBar, setShowTabBar] = useState(false);
+    const [showTabBar, setShowTabBar] = useState(true);
 
     /**
      * @type {React.RefObject<HTMLDivElement>}

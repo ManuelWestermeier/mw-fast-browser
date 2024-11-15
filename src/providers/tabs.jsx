@@ -59,6 +59,13 @@ export const TabsProvider = ({ children }) => {
     }, [webviews, setCurrentTabIndex]);
 
     useEffect(() => {
+        webviews.current?.children?.[currentTabIndex]?.scrollIntoView?.({
+            block: "center",
+            behavour: "smooth"
+        })
+    }, [])
+
+    useEffect(() => {
         if (webviews.current && webviews.current[currentTabIndex]) {
             webviews.current[currentTabIndex].scrollIntoView({ block: "center", behavior: "smooth" });
         }
@@ -87,7 +94,14 @@ export const TabsProvider = ({ children }) => {
     };
 
     return (
-        <TabsContext.Provider value={{ tabs, addTab, removeTab, updateTab, webviews, currentTabIndex, setCurrentTabIndex }}>
+        <TabsContext.Provider value={{
+            tabs, addTab, removeTab, updateTab, webviews, currentTabIndex, setCurrentTabIndex: (index) => {
+                webviews.current?.children?.[index]?.scrollIntoView?.({
+                    block: "center",
+                    behavour: "smooth"
+                })
+            }
+        }}>
             {children}
         </TabsContext.Provider>
     );

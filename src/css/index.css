@@ -1,7 +1,7 @@
 :root {
   --ff: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   --c: rgba(255, 255, 255, 0.87);
-  --b: #242424;
+  --b: rgb(0, 11, 21);
 }
 
 * {
@@ -19,7 +19,8 @@ html {
 }
 
 input,
-button {
+button,
+.button {
   padding: 5px;
   margin: 5px;
 
@@ -33,17 +34,29 @@ input::placeholder {
   color: var(--c);
 }
 
+input:focus::placeholder {
+  color: var(--b);
+}
+
 button:focus,
-input:focus {
+input:focus,
+.button:focus {
   background-color: var(--c);
   color: var(--b);
 }
 
-button {
+button,
+.button {
   cursor: pointer;
 }
 
 button:hover,
-input:hover {
+input:hover,
+.button:hover {
   box-shadow: 0 0 20px -10px var(--c);
+}
+
+a {
+  color: var(--c);
+  text-decoration: none;
 }
