@@ -29,19 +29,18 @@ const defaultTabs = [
         title: "fsRch | Search",
         icon: "https://manuelwestermeier.github.io/fsRch/logo.png",
         id: Math.random(),
-    },
-    {
-        url: "https://google.com/",
-        title: "Google",
-        icon: "https://manuelwestermeier.github.io/fsRch/logo.png",
-        id: Math.random(),
-    },
+    }
 ];
 
 export const TabsProvider = ({ children }) => {
     const webviews = useRef(null);
-    const [tabs, setTabs] = useState(defaultTabs);
+    const [tabs, setTabs] = useLocalStorage("mw-b-tabs", defaultTabs);
     const [currentTabIndex, setCurrentTabIndex] = useLocalStorage("mw-b-tab-index", 0);
+
+    useEffect(() => {
+        if (tabs.length == 0)
+            setTabs(defaultTabs)
+    }, [tabs])
 
     useEffect(() => {
         const handleScroll = () => webviews.current && setCurrentTabIndex(getCurrentTabIndex(webviews.current));

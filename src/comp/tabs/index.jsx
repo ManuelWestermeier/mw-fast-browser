@@ -1,28 +1,35 @@
 import { useTabsVisibility } from '../../providers/show-tab-bar';
-import React, { useEffect, useRef } from 'react';
 import { useTabs } from '../../providers/tabs';
+const { ipcRenderer } = require("electron")
+import React, { useEffect } from 'react';
 import Header from '../header';
+import Tab from '../tab';
 import "./index.css";
 
 export default function Tabs() {
-    const { tabs, currentTabIndex, addTab, setCurrentTabIndex, removeTab, updateTab } = useTabs();
+    const { tabs, currentTabIndex, addTab, setCurrentTabIndex, removeTab, updateTab, webviews } = useTabs();
     const { tabsElemRef, toggleTabBarVisibility } = useTabsVisibility();
-    const webviewsRef = useRef([]);
+
+    ipcRenderer.on("KeyDown::Control+Tab", () => toggleTabBarVisibility())
+    ipcRenderer.on("KeyDown::Left", () => setCurrentTabIndex(Math.max(currentTabIndex - 1, 0)))
+    ipcRenderer.on("KeyDown::Right", () => setCurrentTabIndex(Math.min(currentTabIndex + 1, tabs.length)))
 
     useEffect(() => {
-        // Attach listeners to webview elements when tabs change
-        return () => tabs.map((tab, index) => {
-            const webview = webviewsRef.current[index];
-            if (!webview) return;
+        const clearCallbacks = tabs.map((tab, index) => {
+            const webview = webviews[index]; // Access webview from the `webviews` array
+            if (!webview) return null;
 
             const updateTabInfo = async () => {
-                const title = webview.getTitle();
-                const url = webview.getURL();
-                const icon = await webview.executeJavaScript(
-                    `document.querySelector('link[rel~="icon"]')?.href || ''`
-                );
-
-                updateTab(tab.id, { title, url, icon });
+                try {
+                    const title = webview.getTitle();
+                    const url = webview.getURL();
+                    const icon = await webview.executeJavaScript(
+                        `document.querySelector('link[rel~="icon"]')?.href || ''`
+                    );
+                    updateTab(tab.id, { title, url, icon });
+                } catch (error) {
+                    console.error("Failed to update tab info:", error);
+                }
             };
 
             // Attach event listeners
@@ -32,14 +39,18 @@ export default function Tabs() {
             webview.addEventListener('did-navigate-in-page', updateTabInfo);
 
             return () => {
-                // Cleanup listeners when component unmounts or tabs change
+                // Cleanup listeners
                 webview.removeEventListener('did-finish-load', updateTabInfo);
                 webview.removeEventListener('page-title-updated', updateTabInfo);
                 webview.removeEventListener('did-navigate', updateTabInfo);
                 webview.removeEventListener('did-navigate-in-page', updateTabInfo);
             };
-        }).forEach(clearCb => clearCb());
-    }, [tabs]);
+        });
+
+        return () => {
+            clearCallbacks.forEach(clearCb => clearCb?.());
+        };
+    }, [tabs, webviews]);
 
     return (
         <div ref={tabsElemRef} className="tabs full-screen fixed-t-l">
@@ -48,52 +59,15 @@ export default function Tabs() {
                     addTab({ icon: "", id: Math.random(), title: value, url: value });
                 }}
             />
-            <div>
+            <div className='tabs-view'>
                 {tabs.map((tab, index) => {
                     const active = currentTabIndex === index;
-                    return (
-                        <div
-                            onKeyDown={(e) => {
-                                if (e.key === "ArrowUp") {
-                                    const nextElem = e.target.parentElement.children[index - 1];
-                                    if (!nextElem) return;
-                                    nextElem.focus();
-                                    nextElem.scrollIntoView({ behavior: "smooth", block: "center" });
-                                } else if (e.key === "ArrowDown") {
-                                    const nextElem = e.target.parentElement.children[index + 1];
-                                    if (!nextElem) return;
-                                    nextElem.focus();
-                                    nextElem.scrollIntoView({ behavior: "smooth", block: "center" });
-                                } else if (e.key === "Enter") {
-                                    setCurrentTabIndex(index);
-                                    toggleTabBarVisibility()
-                                }
-                            }}
-                            onClick={() => {
-                                setCurrentTabIndex(index);
-                                toggleTabBarVisibility()
-                            }}
-                            tabIndex="-1"
-                            key={tab.id}
-                            className={`tab flex${active ? " current" : ""}`}
-                        >
-                            <input
-                                type="text"
-                                placeholder={tab.url}
-                                defaultValue={tab.url}
-                                onChange={(e) => updateTab(tab.id, { url: e.target.value })}
-                            />
-                            <span>{tab.title || tab.url}</span>
-                            <webview
-                                ref={(el) => (webviewsRef.current[index] = el)}
-                                src={tab.url}
-                                style={{ width: 0, height: 0, display: 'none' }}
-                            />
-                            <button className="flex" onClick={() => removeTab(tab.id)}>
-                                x
-                            </button>
-                        </div>
-                    );
+                    return <Tab
+                        removeTab={removeTab}
+                        setCurrentTabIndex={setCurrentTabIndex}
+                        toggleTabBarVisibility={toggleTabBarVisibility}
+                        active={active} index={index} tab={tab} key={tab.id}
+                    />
                 })}
             </div>
         </div>

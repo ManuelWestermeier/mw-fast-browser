@@ -48,10 +48,10 @@ async function createWindow() {
             mainWindow.webContents.send('KeyDown::Control+W', '');
         });
         globalShortcut.register('Alt+Left', () => {
-            mainWindow.webContents.send('KeyDown::Control+Left', '');
+            mainWindow.webContents.send('KeyDown::Left', '');
         });
         globalShortcut.register('Alt+Right', () => {
-            mainWindow.webContents.send('KeyDown::Control+Right', '');
+            mainWindow.webContents.send('KeyDown::Right', '');
         });
     });
 

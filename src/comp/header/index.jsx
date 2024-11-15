@@ -1,7 +1,8 @@
+import { NavLink } from 'react-router-dom';
+const { ipcRenderer } = require("electron")
+import toUrl from '../../utils/get-url';
 import React, { useState } from 'react';
 import "./index.css";
-import { NavLink } from 'react-router-dom';
-import toUrl from '../../utils/get-url';
 
 const navLinks = [
     { title: "Settings", url: "/settings" },
@@ -17,6 +18,8 @@ export default function Header({ addNewTab }) {
             addNewTab(toUrl(value));
         }
     };
+
+    ipcRenderer.on("KeyDown::Control+T", () => setShowNewTabInput(true))
 
     return (
         <header className="tabs-header">

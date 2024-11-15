@@ -17,6 +17,8 @@ export const TabsVisibilityProvider = ({ children }) => {
      */
     const [showTabBar, setShowTabBar] = useState(true);
 
+
+
     /**
      * @type {React.RefObject<HTMLDivElement>}
      * Reference for the tab bar element
